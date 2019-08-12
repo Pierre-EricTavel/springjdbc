@@ -9,10 +9,6 @@ import java.util.Collection;
 import net.itta.ittaspringjdbc.business.People;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- *
- * @author Administrator
- */
 public interface PeopleDao extends GenericDao<Integer, People>{
 
    

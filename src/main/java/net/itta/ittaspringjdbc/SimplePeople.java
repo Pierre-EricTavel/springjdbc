@@ -74,7 +74,7 @@ public class SimplePeople {
             compte = namedTemplate.update("update PEOPLE set name = :nom, birthdate = :anniversaire where id= :id", params);
 
             SimpleJdbcInsert insert = new SimpleJdbcInsert(dataSource).withTableName("PEOPLE");
-            Map<String, Object> tobeinsert = new HashMap<String, Object>();
+            Map<String, Object> tobeinsert = new HashMap<>();
             tobeinsert.put("name", "Jane");
             tobeinsert.put("birthdate", "1895-01-11");
             tobeinsert.put("id", 3);

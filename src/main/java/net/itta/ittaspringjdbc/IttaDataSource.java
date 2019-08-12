@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class IttaDataSource {
     
     @Autowired
-   private Environment env;
+    private Environment env;
     
     public DataSource dataSource(){
         SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
@@ -32,6 +32,11 @@ public class IttaDataSource {
 
         return dataSource;
     }
+
+    public IttaDataSource() {
+        System.out.println("*--*-*-*-*-*-*-*-*-IttaDataSource*-*-*-*-*-*-*-*-*");
+    }
+    
     
     
     

@@ -6,7 +6,7 @@
 package net.itta.ittaspringjdbc;
 
 import java.util.Collection;
-
+import org.springframework.transaction.annotation.Transactional;
 public interface GenericDao <K,T> {
   
     public T findOne(K id);
