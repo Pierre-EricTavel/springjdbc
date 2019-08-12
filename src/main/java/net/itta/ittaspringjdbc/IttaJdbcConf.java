@@ -5,7 +5,6 @@
  */
 package net.itta.ittaspringjdbc;
 
-import javax.sql.DataSource;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,8 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
-import org.springframework.transaction.jta.JtaTransactionManager;
 
 @Configuration
 @ComponentScan("net.itta.ittaspringjdbc")
