@@ -11,49 +11,50 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
 
 @Configuration
 @ComponentScan("net.itta.ittaspringjdbc")
 @EnableTransactionManagement(proxyTargetClass = true,mode = AdviceMode.PROXY)
-public class IttaJdbcConf {//implements TransactionManagementConfigurer{
+public class IttaJdbcConf {
+    
+//    @Bean
+//    public IttaDataSource ittaDataSource(){
+//        return new IttaDataSource();
+//    }
+    
     
     @Bean
-    public IttaDataSource ittaDataSource(){
-        return new IttaDataSource();
+    public IttaMariaDataSource ittaDataSource(){
+        System.out.println("---------------creating ittaDataSource---------------------------");
+        return new IttaMariaDataSource();
     }
+    
     
     @Bean
     public PeopleJdbcTemplate peopleJdbcTemplate(){
-        final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(ittaDataSource().dataSource());
+        final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(ittaDataSource().getDataSource());
         PeopleJdbcTemplate pjt = new PeopleJdbcTemplate(namedParameterJdbcTemplate);
                
         return pjt;
     }
     @Bean
      public CarJdbcTemplate carJdbcTemplate(){
-        final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(ittaDataSource().dataSource());
+        final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(ittaDataSource().getDataSource());
         CarJdbcTemplate cjt = new CarJdbcTemplate(namedParameterJdbcTemplate);
         return cjt;
     }
      
-//     @Bean
-//    public DataSourceTransactionManager txManager(){
-//      DataSourceTransactionManager dstm=  new DataSourceTransactionManager(ittaDataSource().dataSource());
-//      dstm.setRollbackOnCommitFailure(true);
-//      return dstm;
-//    }
-//
-//    @Override
-//    public PlatformTransactionManager annotationDrivenTransactionManager() {
-//        return txManager();
-//    }
-  @Bean
-  public PlatformTransactionManager transactionManager() {
+
+  @Bean()
+  public DataSourceTransactionManager transactionManager() {
       DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
-      transactionManager.setDataSource(ittaDataSource().dataSource());
+      transactionManager.setDataSource(ittaDataSource().getDataSource());
       return transactionManager;
   }
    
+  
+  
 }
+

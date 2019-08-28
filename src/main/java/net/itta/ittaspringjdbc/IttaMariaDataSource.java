@@ -6,6 +6,11 @@
 package net.itta.ittaspringjdbc;
 
 
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,32 +18,34 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
 
 @Component
-@PropertySource("classpath:ittadb.properties")
-public class IttaDataSource {
+@PropertySource("classpath:ittadb_maria.properties")
+public class IttaMariaDataSource {
     
     @Autowired
     private Environment env;
     
+  
+    SingleConnectionDataSource dataSource;
+    
     public DataSource getDataSource(){
-        SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
-        dataSource.setDriverClassName(env.getProperty("ittadb.driverClassName"));
-        dataSource.setUrl(env.getProperty("ittadb.url"));
-        dataSource.setUsername(env.getProperty("ittadb.username"));
-        dataSource.setPassword(env.getProperty("ittadb.password"));
-        //dataSource.setAutoCommit(false);
-        
+
+        if(dataSource==null){
+            dataSource = new SingleConnectionDataSource();
+            dataSource.setDriverClassName(env.getProperty("ittamariadb.driverClassName"));
+            dataSource.setUrl(env.getProperty("ittamariadb.url"));
+            dataSource.setUsername(env.getProperty("ittamariadb.username"));
+            dataSource.setPassword(env.getProperty("ittamariadb.password"));
+            dataSource.setAutoCommit(true);
+        }
         return dataSource;
     }
 
-    public IttaDataSource() {
-        System.out.println("*--*-*-*-*-*-*-*-*-IttaDataSource*-*-*-*-*-*-*-*-*");
+    public IttaMariaDataSource() {
     }
-    
-    
-    
-    
+
 }

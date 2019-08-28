@@ -9,21 +9,20 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import net.itta.ittaspringjdbc.business.Car;
 
 import net.itta.ittaspringjdbc.business.People;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AdviceMode;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-@ComponentScan("net.itta.ittaspringjdbc")
-@EnableTransactionManagement(proxyTargetClass = true,mode = AdviceMode.PROXY)
+
 public class PeopleJdbcTemplate implements PeopleDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -64,20 +63,32 @@ public class PeopleJdbcTemplate implements PeopleDao {
         return jdbcTemplate.update(sql, parameterSource); 
        }
        catch(DataAccessException e){
-               throw new RuntimeException("ERREUR D'INSERTION");
+               throw new RuntimeException("ERREUR D'INSERTION",e);
                }
     }
 
-    @Transactional(value = "transactionManager")
+    @Transactional(propagation = Propagation.REQUIRES_NEW,transactionManager = "transactionManager")
     public int createMultiple(People... people) {
         int r = 0;
         String sql = "insert into PEOPLE (id,name,birthdate) values(:id, :name, :birthDate)";
         for (People people1 : people) {
             SqlParameterSource parameterSource1 = new BeanPropertySqlParameterSource(people1);
-            r += jdbcTemplate.update(sql, parameterSource1) + jdbcTemplate.update(sql, parameterSource1);
+            r += jdbcTemplate.update(sql, parameterSource1);
         }
 
         return r;
+    }
+    
+    
+    
+    
+     @Transactional
+    public int createMultipleBatch(People... people) {
+        String sql = "insert into PEOPLE (id,name,birthdate) values(:id, :name, :birthDate)";
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch((Object[])people);
+        
+        int[] updateCounts = jdbcTemplate.batchUpdate( sql, batch);
+        return Stream.of(updateCounts).mapToInt(i->i[0]).sum();
     }
 
     @Override

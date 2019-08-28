@@ -14,17 +14,14 @@ import net.itta.ittaspringjdbc.business.Car;
 import net.itta.ittaspringjdbc.business.People;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AdviceMode;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
-@ComponentScan("net.itta.ittaspringjdbc")
-@EnableTransactionManagement(proxyTargetClass = true,mode = AdviceMode.PROXY)
 public class CarJdbcTemplate implements CarDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;

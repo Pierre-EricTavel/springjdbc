@@ -5,9 +5,8 @@
  */
 package net.itta.ittaspringjdbc;
 
-import java.util.Collection;
 import net.itta.ittaspringjdbc.business.People;
-import org.springframework.jdbc.core.JdbcTemplate;
+
 
 public interface PeopleDao extends GenericDao<Integer, People>{
 

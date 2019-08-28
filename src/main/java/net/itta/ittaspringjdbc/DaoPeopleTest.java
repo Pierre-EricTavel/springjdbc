@@ -19,11 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 @ComponentScan("net.itta.ittaspringjdbc")
-@EnableTransactionManagement(mode = AdviceMode.PROXY,proxyTargetClass = true )
 public class DaoPeopleTest {
 
     public static void main(String[] args) {
-        testTransaction();
+        testMariaPersonnes();
     }
 
     static void testCar() {
@@ -45,6 +44,28 @@ public class DaoPeopleTest {
         System.out.println("nb supprimé =" + peopleJdbcTemplate.deleteById(1));
 
     }
+    
+    static void testMariaPersonnes() {
+        ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(IttaJdbcConf.class);
+        PeopleJdbcTemplate peopleJdbcTemplate = context.getBean(PeopleJdbcTemplate.class);
+//         People p = new People(1, "aaaaaaaaaa", new Date());
+//         if (peopleJdbcTemplate.findOne(1) == null) {
+//            peopleJdbcTemplate.create(p);
+//        }
+         People p1 = new People(2, "bbbbbbbbbbb", new Date());
+         People p2 = new People(2, "cccccccccccc", new Date());
+         
+         try {
+               peopleJdbcTemplate.createMultiple(p1,p2);
+        } catch (RuntimeException e) {
+             System.out.println(e);
+        }
+      
+
+    }
+    
+    
+    
 
     static void testPeople() {
         ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(IttaJdbcConf.class);
@@ -87,17 +108,17 @@ public class DaoPeopleTest {
         
         PlatformTransactionManager transactionManager = context.getBean(PlatformTransactionManager.class);
         People p1 = new People(1, "aaaaaaaaaa", new Date());
-        People p11 = new People(1, "bbbbbbbbbbbbbb", new Date());
+        People p11 = new People(2, "bbbbbbbbbbbbbb", new Date());
         TransactionDefinition def = new DefaultTransactionDefinition();
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
 
-            peopleJdbcTemplate.createMultiple(p1,p11);
+            peopleJdbcTemplate.createMultipleBatch(p1,p11);
             transactionManager.commit(status);
 
         } catch (RuntimeException e) {
             System.out.println(e);
-            transactionManager.rollback(status);
+           transactionManager.rollback(status);
             
         }
 
